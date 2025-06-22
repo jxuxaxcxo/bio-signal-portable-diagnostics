@@ -1,0 +1,8 @@
+fastapi
+uvicorn
+neurokit2==0.2.10
+scipy
+numpy
+matplotlib
+python-multipart
+heartpy==1.2.7
