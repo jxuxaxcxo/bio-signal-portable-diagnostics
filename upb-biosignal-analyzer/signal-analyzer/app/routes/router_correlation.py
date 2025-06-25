@@ -2,7 +2,7 @@ from fastapi import APIRouter, UploadFile, File, HTTPException
 import numpy as np
 
 from app.services.PeakIntervalAnalyzer.PeakIntervalAnalyzer import PeakIntervalAnalyzer
-from analizer.containers.ecg_container.app.services.CorrelationAnalyzer.CorrelationAnalyzer import CorrelationAnalyzer
+#from app.services.CrossCorrelationAnalyzer.CrossCorrelationAnalyzer import CorrelationAnalyzer
 
 router = APIRouter(prefix="/correlation", tags=["Correlation"])
 
@@ -15,7 +15,7 @@ async def correlate_linear(ecg_file: UploadFile = File(...), audio_array_file: U
         raise HTTPException(status_code=400, detail="ECG or audio data is empty")
 
     bpm = PeakIntervalAnalyzer(sample_rate=300).analyze(ecg_data).get("bpm", None)
-    correlation_score = CorrelationAnalyzer.linear_correlation(ecg_data, audio_data)
+    correlation_score = 0  #CorrelationAnalyzer.linear_correlation(ecg_data, audio_data)
 
     return {
         "bpm_ecg": bpm,
@@ -28,7 +28,7 @@ async def correlate_cross(ecg_file: UploadFile = File(...), audio_array_file: Up
     ecg_data = np.fromstring((await ecg_file.read()).decode(), sep=',')
     audio_data = np.fromstring((await audio_array_file.read()).decode(), sep=',')
 
-    result = CorrelationAnalyzer.cross_correlation(ecg_data, audio_data)
+    result = 0 #CorrelationAnalyzer.cross_correlation(ecg_data, audio_data)
 
     return {
         "correlation_type": "cross",

@@ -6,14 +6,15 @@ router = APIRouter()
 @router.post("/ecg")
 async def analyze_ecg(request: Request):
     body = await request.json()
-    return await forward_request("http://ecg-analysis:5000/analyze", body)
+    return await forward_request("http://signal_analyzer:8000/ecg/analyze", body)
 
+# Puedes dejar estos para el futuro:
 @router.post("/audio")
 async def analyze_audio(request: Request):
     body = await request.json()
-    return await forward_request("http://audio-analysis:5001/analyze", body)
+    return {"message": "Audio analysis temporarily disabled."}
 
 @router.post("/fusion")
 async def analyze_fusion(request: Request):
     body = await request.json()
-    return await forward_request("http://fusion-analysis:5002/analyze", body)
+    return {"message": "Fusion analysis temporarily disabled."}
