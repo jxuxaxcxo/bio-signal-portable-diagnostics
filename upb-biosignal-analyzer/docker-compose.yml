@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   signal_analyzer:
     build: ./signal-analyzer
@@ -15,7 +13,7 @@ services:
     ports:
       - "8000:8000"
     depends_on:
-      - signal-analyzer
+      - signal_analyzer
     networks:
       - bio-net
 
