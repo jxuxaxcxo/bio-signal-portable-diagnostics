@@ -1,0 +1,20 @@
+# ❌ Ignorar solo los archivos pesados o innecesarios de testing
+testing/testing-assets/
+
+# ❌ Ignorar cachés y archivos compilados
+__pycache__/
+*.py[cod]
+
+# ❌ Ignorar entornos virtuales y config local
+.env/
+venv/
+.venv/
+condaenv.*
+
+# ❌ Ignorar configuraciones del sistema/editor
+.DS_Store
+Thumbs.db
+.vscode/
+
+# ✅ ¡Asegúrate de NO ignorar el código de testing!
+# (Ya no pongas "/testing/" porque ignoraría todo)

@@ -1,0 +1,11 @@
+name: signal_analyzer_testing_env
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+  - python=3.10
+  - pip
+  - pip:
+      - -r requirements.txt
+      - wfdb
+      - matplotlib
