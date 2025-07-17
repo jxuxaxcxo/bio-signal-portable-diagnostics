@@ -15,3 +15,10 @@ class ECGAnalysisResult(BaseModel):
     bpm: Optional[float] = None
     rr_variability: Optional[float] = None
     num_peaks: Optional[int] = None
+
+class ECGSignalFeatures(BaseModel):
+    rr_intervals: List[float]
+    peak_locations: List[int]
+    rr_variability: float
+    bpm: Optional[float] = None
+    duration_sec: Optional[float] = None

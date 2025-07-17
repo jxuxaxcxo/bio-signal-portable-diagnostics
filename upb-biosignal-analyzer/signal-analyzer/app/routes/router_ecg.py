@@ -3,8 +3,8 @@ from typing import Optional
 import numpy as np
 
 from app.models.ecg_models import ECGInput
-from app.services.EntropyAnalyzer.EntropyAnalyzer import EntropyAnalyzer
-from app.services.PeakIntervalAnalyzer.PeakIntervalAnalyzer import PeakIntervalAnalyzer
+from app.services.ECG_Analyzers.EntropyAnalyzer.EntropyAnalyzer import EntropyAnalyzer
+from app.services.ECG_Analyzers.PeakIntervalAnalyzer.PeakIntervalAnalyzer import PeakIntervalAnalyzer
 
 router = APIRouter(prefix="/ecg", tags=["ECG"])
 

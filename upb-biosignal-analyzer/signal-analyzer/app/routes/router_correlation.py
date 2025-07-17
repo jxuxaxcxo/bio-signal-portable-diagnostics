@@ -1,7 +1,7 @@
 from fastapi import APIRouter, UploadFile, File, HTTPException
 import numpy as np
 
-from app.services.PeakIntervalAnalyzer.PeakIntervalAnalyzer import PeakIntervalAnalyzer
+from app.services.ECG_Analyzers.PeakIntervalAnalyzer.PeakIntervalAnalyzer import PeakIntervalAnalyzer
 #from app.services.CrossCorrelationAnalyzer.CrossCorrelationAnalyzer import CorrelationAnalyzer
 
 router = APIRouter(prefix="/correlation", tags=["Correlation"])
