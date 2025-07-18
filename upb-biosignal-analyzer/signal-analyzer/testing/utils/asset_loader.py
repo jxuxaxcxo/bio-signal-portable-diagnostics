@@ -1,5 +1,7 @@
 import json
 import os
+import wfdb
+import numpy as np
 
 def load_assets_constants(json_file_path: str) -> dict:
     """
@@ -34,3 +36,46 @@ def load_assets_codes(json_file_path: str) -> list:
     with open(json_file_path, 'r') as file:
         data = json.load(file)
         return data.get("codes", [])
+    
+
+def load_sample_ecg_data(sample_code: str, format_hint: str = "wfdb") -> tuple:
+    """
+    Carga una señal ECG desde assets en distintos formatos.
+
+    Parámetros:
+    - sample_code (str): El nombre base del sample (sin extensión)
+    - format_hint (str): 'wfdb', 'csv', 'json', etc.
+
+    Retorna:
+    - (ecg_data, sample_rate)
+    """
+
+    base_path = os.path.join("testing", "testing-assets", "mit-bih-arrhythmia-database", sample_code, sample_code)
+
+    if format_hint == "wfdb":
+        try:
+            record = wfdb.rdrecord(base_path)
+            ecg_signal = record.p_signal[:, 0]  # Suponiendo que canal 0 es ECG
+            sample_rate = record.fs
+            return ecg_signal.tolist(), sample_rate
+        except Exception as e:
+            raise FileNotFoundError(f"No se pudo leer el archivo WFDB en {base_path}: {e}")
+
+    elif format_hint == "csv":
+        csv_path = base_path + ".csv"
+        if not os.path.exists(csv_path):
+            raise FileNotFoundError(f"No se encontró el archivo CSV: {csv_path}")
+        data = np.loadtxt(csv_path, delimiter=",")
+        return data.tolist(), 300  # Default sample rate
+
+    elif format_hint == "json":
+        json_path = base_path + ".json"
+        if not os.path.exists(json_path):
+            raise FileNotFoundError(f"No se encontró el archivo JSON: {json_path}")
+        import json
+        with open(json_path, 'r') as f:
+            obj = json.load(f)
+        return obj["data"], obj.get("sample_rate", 300)
+
+    else:
+        raise ValueError(f"Formato no soportado: {format_hint}")

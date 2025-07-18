@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from app.routes.router_ecg import router as ecg_router
 from app.routes.router_audio import router as audio_router
-from app.routes.router_correlation import router as correlation_router
+from app.routes.router_signal_fusion import router as correlation_router
 
 app = FastAPI()
 
