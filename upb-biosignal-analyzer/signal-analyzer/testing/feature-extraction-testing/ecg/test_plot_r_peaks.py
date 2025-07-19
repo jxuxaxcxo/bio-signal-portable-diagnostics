@@ -27,8 +27,11 @@ def plot_r_peaks(signal, sample_rate, r_peaks):
 
 def main():
     # ✅ Aseguramos que se lea como WFDB (formato PhysioNet)
-    ecg_array, sample_rate = load_sample_ecg_data("04908", format_hint="wfdb")
-
+    ecg_array, sample_rate = load_sample_ecg_data(
+        "04015",
+        format_hint="wfdb",
+        max_duration_sec=30
+    )
     input_data = ECGInput(ecg_data=ecg_array, sample_rate=sample_rate)
     extractor = ECGFeatureExtractor()
     features = extractor.extract_features(input_data)
