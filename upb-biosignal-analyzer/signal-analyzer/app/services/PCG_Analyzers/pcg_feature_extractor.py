@@ -1,5 +1,3 @@
-# pcg_feature_extractor.py
-
 import numpy as np
 from scipy.signal import find_peaks
 from app.models.pcg_models import PCGInput, PCGSignalFeatures
@@ -25,16 +23,19 @@ class PCGFeatureExtractor:
         if len(s1_locations) >= 2:
             inter_beat_intervals = np.diff(s1_locations) / sr
             bpm = 60 / np.mean(inter_beat_intervals)
+            variability = float(np.var(inter_beat_intervals))
         else:
             inter_beat_intervals = []
             bpm = None
+            variability = None
 
         # --- Ensamble de resultados ---
         return PCGSignalFeatures(
-            inter_beat_intervals=inter_beat_intervals.tolist(),
+            inter_beat_intervals=inter_beat_intervals,
             peak_locations=peak_indices.tolist(),
             s1_locations=s1_locations,
             s2_locations=s2_locations,
             bpm=bpm,
+            variability=variability,
             duration_sec=duration_sec
         )

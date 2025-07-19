@@ -19,9 +19,10 @@ class PCGAnalysisResult(BaseModel):
 
 class PCGSignalFeatures(BaseModel):
     inter_beat_intervals: List[float]  # Tiempo entre latidos (de un S1 a otro)
-    peak_locations: List[int]  # Índices de todos los picos de sonido cardíaco
-    s1_locations: List[int]  # Índices específicos de los eventos S1
-    s2_locations: List[int]  # Índices específicos de los eventos S2
+    peak_locations: List[int]          # Índices de todos los picos de sonido cardíaco
+    s1_locations: List[int]            # Índices específicos de los eventos S1
+    s2_locations: List[int]            # Índices específicos de los eventos S2
     bpm: Optional[float] = None
+    variability: Optional[float] = None  # ✅ Nueva métrica agregada
     duration_sec: Optional[float] = None
     spectral_entropy: Optional[float] = None  # Extraíble si haces análisis de frecuencia
