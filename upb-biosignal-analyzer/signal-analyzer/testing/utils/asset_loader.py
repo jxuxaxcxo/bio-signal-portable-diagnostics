@@ -2,6 +2,7 @@ import json
 import os
 import wfdb
 import numpy as np
+from scipy.io import wavfile
 
 def load_assets_constants(json_file_path: str) -> dict:
     """
@@ -92,3 +93,27 @@ def load_sample_ecg_data(sample_code: str, format_hint: str = "wfdb", max_durati
 
     else:
         raise ValueError(f"Formato no soportado: {format_hint}")
+
+
+def load_sample_audio_data(filename: str, base_dir: str = "testing/testing-assets/synthetic-heart-sounds"):
+    """
+    Carga un archivo .wav como una lista de floats normalizados [-1, 1].
+    """
+    file_path = os.path.join(base_dir, filename)
+
+    if not os.path.exists(file_path):
+        raise FileNotFoundError(f"Audio file not found: {file_path}")
+
+    sr, data = wavfile.read(file_path)
+
+    # Asegurar que es mono
+    if len(data.shape) > 1:
+        data = data[:, 0]
+
+    # Normalizar
+    data = data.astype(np.float32)
+    max_val = np.max(np.abs(data))
+    if max_val > 0:
+        data /= max_val
+
+    return data.tolist(), sr
