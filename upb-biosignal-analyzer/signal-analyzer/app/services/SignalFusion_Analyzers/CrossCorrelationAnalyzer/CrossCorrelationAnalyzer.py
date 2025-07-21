@@ -8,14 +8,17 @@ from app.models.signal_fusion_models import SignalFusionInput, SignalFusionResul
 class CrossCorrelationAnalyzer:
 
     def __init__(self, sample_rate: int = 1000):
-        self.sample_rate = sample_rate  # Solo se usa si queremos convertir delays a segundos
+        self.sample_rate = sample_rate
 
     def analyze(self, fusion_input: SignalFusionInput) -> SignalFusionResult:
         ecg = fusion_input.ecg_features
         pcg = fusion_input.pcg_features
 
         # === Validaciones básicas ===
-        if not ecg.peak_locations or not pcg.peak_locations:
+        r_peaks = ecg.r_peaks or []
+        t_waves = ecg.t_waves or []
+
+        if not r_peaks or not pcg.peak_locations:
             return SignalFusionResult(
                 correlation_score=0.0,
                 alignment_delay_sec=0.0,
@@ -23,14 +26,14 @@ class CrossCorrelationAnalyzer:
                 aligned_s2_to_t_count=0,
                 alignment_score=0.0,
                 diagnostic_hint="Datos insuficientes para análisis",
-                notes="Faltan picos en ECG o PCG"
+                notes="Faltan R-peaks o PCG S1/S2"
             )
 
         # === Señales binarias de eventos ===
         ecg_signal_bin = np.zeros(int(ecg.duration_sec * self.sample_rate))
         pcg_signal_bin = np.zeros(int(pcg.duration_sec * self.sample_rate))
 
-        for loc in ecg.peak_locations:
+        for loc in r_peaks:
             if loc < len(ecg_signal_bin):
                 ecg_signal_bin[loc] = 1
 
@@ -50,24 +53,24 @@ class CrossCorrelationAnalyzer:
         lag_seconds = lag_samples / self.sample_rate
         correlation_score = np.max(correlation) / (np.sum(ecg_signal_bin) or 1)
 
-        # === Chequeo de alineamiento R→S1 y T→S2 ===
+        # === Chequeo de alineamiento R→S1 y T→S2 usando PQRST ===
         aligned_s1 = 0
         aligned_s2 = 0
         tolerance = 0.15  # en segundos
 
-        for r in ecg.peak_locations:
+        for r in r_peaks:
             r_time = r / self.sample_rate
             aligned_s1 += any(
                 abs((s1 / self.sample_rate) - r_time) <= tolerance for s1 in pcg.s1_locations
             )
 
-        for t in ecg.peak_locations:  # 👈 por ahora usamos R también como proxy de T
+        for t in t_waves:
             t_time = t / self.sample_rate
             aligned_s2 += any(
                 abs((s2 / self.sample_rate) - t_time) <= tolerance for s2 in pcg.s2_locations
             )
 
-        total_beats = max(len(ecg.peak_locations), 1)
+        total_beats = max(len(r_peaks), 1)
         alignment_score = (aligned_s1 + aligned_s2) / (2 * total_beats)
 
         # === Diagnóstico tentativo ===

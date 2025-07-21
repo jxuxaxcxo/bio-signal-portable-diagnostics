@@ -18,7 +18,14 @@ class ECGAnalysisResult(BaseModel):
 
 class ECGSignalFeatures(BaseModel):
     rr_intervals: List[float]
-    peak_locations: List[int]
+    peak_locations: List[int]  # R-peaks
     rr_variability: float
     bpm: Optional[float] = None
     duration_sec: Optional[float] = None
+
+    # Nuevos campos PQRST
+    p_waves: List[int] = []
+    q_waves: List[int] = []
+    r_peaks: List[int] = []  # De Neurokit
+    s_waves: List[int] = []
+    t_waves: List[int] = []
